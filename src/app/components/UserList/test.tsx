@@ -19,7 +19,10 @@ describe('UserList', () => {
         avatar: "https://reqres.in/img/faces/8-image.jpg"
       }
     ]
-    render(await <UserList data={users} />)
+    const retrieveEmail = () => {
+      return "mockEmail"
+    }
+    render(await <UserList data={users} retrieveEmail={retrieveEmail} />)
     const foundName1 = await screen.findAllByText(users[0].first_name, {exact: false})
     expect(foundName1)
     const foundName2 = await screen.findAllByText(users[1].first_name, {exact: false})

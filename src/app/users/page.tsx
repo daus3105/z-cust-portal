@@ -1,5 +1,5 @@
 import { isAuthenticated } from "../api/google";
-import { getUsers } from "../api/users";
+import { getUserEmail, getUsers } from "../api/users";
 import UserList from "../components/UserList";
 
 export default async function Users() {
@@ -15,7 +15,18 @@ export default async function Users() {
   //   return users.filter(u => u[c.field].toUpperCase().startsWith(c.value.toUpperCase()))
   // })
   // const sortedUser = users.filter(u => sortFirstNameGLastNameW.find(c => u[c.field].toUpperCase().startsWith(c.value.toUpperCase())))
-  const sortedUser = users.filter(u => u.first_name.toLowerCase().startsWith('g') || u.last_name.toLowerCase().startsWith('w'))
+  const sortedUser = users
+    .filter(u => u.first_name.toLowerCase().startsWith('g') || u.last_name.toLowerCase().startsWith('w'))
+    .map(u => {
+      const splitValue = u.email.split('')
+      const atIndex = splitValue.indexOf('@')
+      const maskedEmail = splitValue.map((a:string, b:number) => b > atIndex / 2 && b < atIndex ? '*' : a)
+
+      return {
+        ...u,
+        email: maskedEmail
+      }
+    })
 
   return <main className="flex min-h-screen flex-col items-center md:p-24">
     <div className="bg-white rounded-xl shadow-lg px-5 py-5 w-full mb-4 md:mb-7 mt-4 space-y-2">
@@ -24,6 +35,6 @@ export default async function Users() {
         
       </div>
     </div>
-    <UserList data={sortedUser} />
+    <UserList data={sortedUser} retrieveEmail={getUserEmail} />
   </main>
 }

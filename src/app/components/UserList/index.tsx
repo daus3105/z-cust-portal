@@ -1,5 +1,5 @@
 "use client"
-import MaskedText from "../MaskedText"
+import SecureText from "../SecureText"
 
 type User = {
   id: number
@@ -16,11 +16,11 @@ type UserFilter = Array<{
 
 type UserListProps = {
   data: Array<User>
-  initialSort?: UserFilter
+  retrieveEmail: Function
 }
 
 export default function UserList(props: UserListProps) {
-  const {data, initialSort} = props
+  const {data, retrieveEmail} = props
   // const [sortedUserData, setSortedUserData] = useState(data)
   // const [sortBy, setSortBy] = useState('first_name')
   // const [isSortDesc, setIsSortDesc] = useState(true)
@@ -36,7 +36,7 @@ export default function UserList(props: UserListProps) {
         <div>
           <div>First Name: {i.first_name}</div>
           <div>Last Name: {i.last_name} </div>
-          <div>email: <MaskedText>{i.email}</MaskedText></div>
+          <div>email: <SecureText retrieveAction={() => retrieveEmail(i.id)}>{i.email}</SecureText></div>
         </div>
       </div>
       {o < data.length - 1 ? <div className="border-slate-100 border-t-2 pb-6" /> : null}
